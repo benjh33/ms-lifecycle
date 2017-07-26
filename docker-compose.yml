@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+
+  cd:
+    build:
+      context: ./continuous-delivery
+  prod:
+    build:
+      context: ./prod
+  logging:
+    build:
+      context: ./logging
+  sd1:
+    build:
+      context: ./service-discovery
+  sd2:
+    build:
+      context: ./service-discovery
+  sd3:
+    build:
+      context: ./service-discovery
+  proxy:
+    build:
+      context: ./proxy
+  swarm-master:
+    build:
+      context: ./swarm-master
+  swarm-node1:
+    build:
+      context: ./swarm-node
+  swarm-node2:
+    build:
+      context: ./swarm-node
+  mesos1:
+    build:
+      context: ./mesos
+  mesos2:
+    build:
+      context: ./mesos
+

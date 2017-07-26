@@ -1,5 +1,5 @@
-- hosts: localhost
-  remote_user: vagrant
+- hosts: cd
+  remote_user: ubuntu
   serial: 1
   roles:
     - common
