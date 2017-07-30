@@ -1,0 +1,17 @@
+- name: start-ec2
+  ec2:
+    key_name: devops-toolkit
+    region: us-east-1
+    instance_type: m3.medium
+    instance_tags:
+      Name: devops-toolkit-cd
+    image: ami-d15a75c7 
+    spot_price: 0.03
+    spot_wait_timeout: 600
+    spot_launch_group: devops-toolkit
+    wait: yes
+    group: devops-toolkit
+    count: 3
+    vpc_subnet_id: subnet-6d1e9134
+    assign_public_ip: yes
+

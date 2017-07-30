@@ -1,4 +1,4 @@
-FROM  phusion/baseimage:latest
+FROM  ubuntu:latest
 MAINTAINER bjameshunter@gmail.com
 
 RUN apt-get -y update && \
@@ -17,5 +17,12 @@ deprecation_warnings=False\n\
 become=True\n\
 become_method=sudo\n\
 become_user=root" > /etc/ansible/ansible.cfg
+
+RUN useradd prod_user && \
+    mkdir /home/prod_user && \
+    chown -R prod_user /home/prod_user
+
+USER dt
+WORKDIR /home/prod_user/
 
 EXPOSE 22
