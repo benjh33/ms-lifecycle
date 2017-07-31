@@ -1,6 +1,20 @@
+- hosts: localhost
+  remote_user: ubuntu
+  serial: 1
+  vars:
+    - EC2_NAME_TAG: 'devops-toolkit-cd'
+    - EC2_ROLE: 'cd'
+    - EC2_PRIVATE_IP: '10.100.198.200'
+  roles:
+    - spot-ec2
+
 - hosts: cd
   remote_user: ubuntu
   serial: 1
+  gather_facts: no
+  pre_tasks:
+  - name: install python-minimal
+    raw: sudo apt-get -y install python-minimal
   roles:
     - common
     - docker

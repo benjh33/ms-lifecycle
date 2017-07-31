@@ -20,7 +20,7 @@
     ports: 5000:5000
     volumes:
       - "{{ registry_host_dir }}:/var/lib/registry/docker/registry"
-      - /data/registry/conf:/conf
+      - "{{ registry_host_dir }}/conf:/conf"
   tags: [registry]
 
 - name: Mirror container is running
@@ -30,6 +30,6 @@
     ports: 5001:5000
     volumes:
       - "{{ registry_host_dir }}-mirror:/var/lib/registry/docker/registry"
-      - /data/registry-mirror/conf:/conf
+      - "{{ registry_host_dir }}-mirror/conf:/conf"
     command: serve /conf/config.yml
   tags: [registry]
