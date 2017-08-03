@@ -1,0 +1,15 @@
+- include: cd.yml
+- include: prod.yml
+
+# write hosts file on all devops hosts
+- hosts: tag_devops_toolkit
+  remote_user: ubuntu
+  serial: 1
+  tasks:
+  - name: update hosts file
+    lineinfile:
+      path: "/etc/hosts"
+      insertafter: "127\\.0\\.0\\.1 .*"
+      regexp: ".* {{hostvars[item].ec2_tag_role }}$"
+      line: "{{ hostvars[item].ec2_private_ip_address }} {{ hostvars[item].ec2_tag_role }}"
+    with_items: "{{ groups['tag_devops_toolkit'] }}"

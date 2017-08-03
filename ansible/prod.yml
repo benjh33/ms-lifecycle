@@ -4,7 +4,6 @@
   vars:
     - EC2_NAME_TAG: 'devops-toolkit-prod'
     - EC2_ROLE: 'prod'
-    - EC2_PRIVATE_IP: '10.100.198.201'
   roles:
     - spot-ec2
 
@@ -18,3 +17,4 @@
   roles:
     - common
     - docker
+

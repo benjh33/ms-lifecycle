@@ -4,7 +4,6 @@
   vars:
     - EC2_NAME_TAG: 'devops-toolkit-cd'
     - EC2_ROLE: 'cd'
-    - EC2_PRIVATE_IP: '10.100.198.200'
   roles:
     - spot-ec2
 
@@ -22,3 +21,4 @@
     - docker-flow
     - consul-template
     - registry
+

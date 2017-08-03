@@ -1,0 +1,3 @@
+{ "insecure-registry": "cd:5000",
+  "registry-mirror": "cd:5001"
+}

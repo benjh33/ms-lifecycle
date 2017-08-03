@@ -28,10 +28,9 @@
     force: yes
   tags: [docker]
 
-- name: Debian docker-py is present
+- name: Debian docker is present
   pip:
-    name: docker-py
-    version: 1.6.0
+    name: docker
     state: present
   tags: [docker]
 
@@ -42,7 +41,11 @@
   register: copy_result
   tags: [docker]
 
-- debug: msg="{{docker_cfg_dest}}"
+- name: Add host to docker service command
+  replace:
+    regexp: ExecStart=/usr/bin/dockerd .*
+    replace: ExecStart=/usr/bin/dockerd -H fd:// -H tcp:0.0.0.0:2375
+    path: /lib/systemd/system/docker.service
 
 - name: Debian Daemon is reloaded
   command: systemctl daemon-reload
@@ -64,11 +67,12 @@
   tags: [docker]
 
 - name: DockerUI is running
-  docker:
+  docker_container:
     image: uifd/ui-for-docker
     name: dockerui
     ports: 9000:9000
     privileged: yes
+    restart: yes
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   when: not skip_ui is defined
