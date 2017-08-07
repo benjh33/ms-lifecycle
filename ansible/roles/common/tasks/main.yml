@@ -16,3 +16,8 @@
   ignore_errors: yes
   with_items: "{{ obsolete_services }}"
   tags: [common]
+
+- name: write vars
+  template: 
+    src: variables.j2
+    dest: /variables.txt

@@ -1,0 +1,20 @@
+- hosts: tag_role_etcd
+  remote_user: ubuntu
+  serial: 1
+  tasks:
+  - name: set some variables
+    set_fact:
+      host_args: "{{ groups['tag_role_etcd'] | map('regex_replace', '^(.*)$', 'http://\\1:2380' ) | list }}"
+      host_names: "{{ groups['tag_role_etcd'] | map('extract', hostvars)| map(attribute='ec2_tag_Name')| list }}"
+  - debug: msg="{{host_names}}"
+  - name: format names
+    set_fact: 
+      value: "{{ item.0 }}={{ item.1 }}"
+    with_together: 
+      - "{{ host_names }}"
+      - "{{ host_args }}"
+    register: formatted_names
+  - name: test
+    debug: msg="{{ formatted_names.results|map(attribute='ansible_facts')|map(attribute='value')| join(',') }}"
+  # - name: give me shortest combo of 2 lists
+  #   debug: msg="{{ [1,2,3]|zip(['a','b','c','d','e','f'])|list }}"

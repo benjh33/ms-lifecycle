@@ -1,5 +1,7 @@
 /.idea
 /*.iml
 .vagrant
+*.retry
 /registry
 /registry-mirror
+

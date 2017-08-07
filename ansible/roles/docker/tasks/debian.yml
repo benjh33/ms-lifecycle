@@ -44,7 +44,7 @@
 - name: Add host to docker service command
   replace:
     regexp: ExecStart=/usr/bin/dockerd .*
-    replace: ExecStart=/usr/bin/dockerd -H fd:// -H tcp:0.0.0.0:2375
+    replace: ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
     path: /lib/systemd/system/docker.service
 
 - name: Debian Daemon is reloaded

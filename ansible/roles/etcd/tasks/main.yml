@@ -6,19 +6,55 @@
   with_items: "{{ files }}"
   tags: [etcd]
 
+- name: set some variables
+  set_fact:
+    host_args: "{{ groups['tag_role_etcd'] | map('regex_replace', '^(.*)$', 'http://\\1:2380' ) | list }}"
+    host_names: "{{ groups['tag_role_etcd'] | map('extract', hostvars)| map(attribute='ec2_tag_Name')| list }}"
+  tags: [etcd]
+- name: format names
+  set_fact: 
+    value: "{{ item.0 }}={{ item.1 }}"
+  with_together: 
+    - "{{ host_names }}"
+    - "{{ host_args }}"
+  register: formatted_names
+  tags: [etcd]
+
 - name: Is running
-  shell: "nohup etcd -name {{ ansible_hostname }} \
+  shell: "nohup etcd -name {{ ec2_tag_Name }} \
     -initial-advertise-peer-urls \
-    http://{{ ip }}:2380 \
+    http://{{ ansible_default_ipv4.address }}:2380 \
     -listen-peer-urls \
-    http://{{ ip }}:2380 \
+    http://{{ ansible_default_ipv4.address }}:2380 \
     -listen-client-urls \
-    http://{{ ip }}:2379,http://127.0.0.1:2379 \
+    http://{{ ansible_default_ipv4.address }}:2379,http://127.0.0.1:2379 \
     -advertise-client-urls \
-    http://{{ ip }}:2379 \
+    http://{{ ansible_default_ipv4.address }}:2379 \
     -initial-cluster-token {{ cl_token }} \
     -initial-cluster \
-    {{ cl_node_01 }},{{ cl_node_02 }},{{ cl_node_03 }} \
+    {{formatted_names.results | map(attribute='ansible_facts')|map(attribute='value')| join(',') }}
     -initial-cluster-state new \
     >/var/log/etcd.log 2>&1 &"
   tags: [etcd]
+  register: etcd_command
+
+- name: debug command
+  debug: msg="{{ etcd_command.cmd }}"
+  
+
+# - name: Is running
+#   shell: "nohup etcd -name {{ ansible_hostname }} \
+#     -initial-advertise-peer-urls \
+#     http://{{ ansible_eth0.ipv4.address }}:2380 \
+#     -listen-peer-urls \
+#     http://{{ ansible_eth0.ipv4.address }}:2380 \
+#     -listen-client-urls \
+#     http://{{ ansible_eth0.ipv4.address }}:2379,http://127.0.0.1:2379 \
+#     -advertise-client-urls \
+#     http://{{ ansible_eth0.ipv4.address }}:2379 \
+#     -initial-cluster-token {{ cl_token }} \
+#     -initial-cluster \
+#     {{ cl_node_01 }},{{ cl_node_02 }},{{ cl_node_03 }} \
+#     -initial-cluster-state new \
+#     >/var/log/etcd.log 2>&1 &"
+#   tags: [etcd]

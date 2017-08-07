@@ -6,7 +6,8 @@
       ec2_remote_facts:
         region: us-east-1
         filters:
-          "tag:devops_toolkit": ''
+          "tag:devops_toolkit": ""
+          "tag:role": ['cd', 'prod', 'etcd']
       register: ec2
     - name: Terminate instances that were previously launched
       ec2:
