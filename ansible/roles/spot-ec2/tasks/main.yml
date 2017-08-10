@@ -36,7 +36,7 @@
     resource: "{{ item[1].id }}"
     state: present
     tags:
-      Name: "{{ EC2_NAME_TAG}}-{{ item[0] }}"
+      Name: "{{ EC2_NAME_TAG }}-{{ item[0] }}"
   with_indexed_items:
     - "{{ec2.tagged_instances}}"
   when: (count_hosts | default(1)) > 1
@@ -47,3 +47,7 @@
     groupname: "{{ EC2_ROLE }}"
   with_items: 
     - "{{ec2.tagged_instances}}"
+#
+# - name: refresh inventory
+#   meta: refresh_inventory
+#

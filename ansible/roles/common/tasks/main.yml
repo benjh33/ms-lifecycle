@@ -1,5 +1,6 @@
 - name: gather facts
   setup:
+  tags: [always]
 
 - name: JQ is present
   apt:
@@ -21,3 +22,4 @@
   template: 
     src: variables.j2
     dest: /variables.txt
+  tags: [always,common]

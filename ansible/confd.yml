@@ -1,6 +1,5 @@
-- hosts: confd
-  remote_user: vagrant
-  serial: 1
+- hosts: serv-disc
+  remote_user: ubuntu
   roles:
     - common
     - confd

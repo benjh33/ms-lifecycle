@@ -1,11 +1,16 @@
+- name: gather facts
+  setup:
+
 - name: Debian apt key for docker
   command: 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg'
   register: docker_key
+  tags: [docker]
 
 - name: Add to keyring
   apt_key:
     data: "{{docker_key.stdout}}"
     state: present
+  tags: [docker]
 
 - name: Debian add Docker repository and update apt cache
   apt_repository:
@@ -46,11 +51,7 @@
     regexp: ExecStart=/usr/bin/dockerd .*
     replace: ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
     path: /lib/systemd/system/docker.service
-
-- name: Debian Daemon is reloaded
-  command: systemctl daemon-reload
-  when: copy_result|changed and is_systemd is defined
-  tags: [docker]
+  register: sysd_result
 
 - name: ubuntu user is added to the docker group
   user:
@@ -59,12 +60,14 @@
   register: user_result
   tags: [docker]
 
-- name: Debian Docker service is restarted
-  service:
+- name: Debian Daemon is reloaded
+  systemd: 
+    daemon_reload: yes
     name: docker
     state: restarted
-  when: copy_result|changed or user_result|changed
+  when: ((copy_result|changed or sysd_result|changed) and is_systemd is defined) or restart_docker is defined
   tags: [docker]
+
 
 - name: DockerUI is running
   docker_container:

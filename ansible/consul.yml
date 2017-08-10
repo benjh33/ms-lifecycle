@@ -1,6 +1,20 @@
-- hosts: consul
-  remote_user: vagrant
-  serial: 1
+- hosts: localhost
+  remote_user: ubuntu
+  vars:
+    - EC2_NAME_TAG: serv-disc
+    - EC2_ROLE: serv-disc
+    - count_hosts: 3
   roles:
-    - common
+    - spot-ec2
+  tags: [always]
+
+- hosts: serv-disc
+  remote_user: ubuntu
+  tags:
+    registrator_protocol: consul
+    registrator_port: 8500
+    registrator_name: registrator-consul
+  roles:
+    - registrator
     - consul
+  tags: [consul]

@@ -1,11 +1,11 @@
-- hosts: all
-  remote_user: vagrant
-  serial: 1
+- hosts: serv-disc
+  remote_user: ubuntu
   vars:
     - registrator_protocol: etcd
     - registrator_port: 2379
   roles:
-    - common
-    - docker
     - etcd
+    - confd
     - registrator
+  tags: [serv-disc, common, docker, registry, etcd, registrator]
+

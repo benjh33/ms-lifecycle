@@ -1,15 +1,15 @@
-ip: "{{ facter_ipaddress_eth1 }}"
 consul_extra: ""
-proxy_url: http://{{ facter_ipaddress_eth1 }}
-proxy_url2: http://{{ facter_ipaddress_eth1 }}
+# proxy_url: http://{{ facter_ipaddress_eth1 }}
+# proxy_url2: http://{{ facter_ipaddress_eth1 }}
 registry: cd:5000
 registry_url: cd:5000/
-jenkins_ip: cd
+# jenkins_ip: cd
 debian_version: xenial
 docker_cfg: daemon.json
 docker_cfg_dest: /etc/docker/
-elk_ip: 10.100.198.202
-jenkins_version: 1.642.4
+# elk_ip: 10.100.198.202
+# jenkins_version: 1.642.4
 registry_host_dir: /data/registry
 agent_user: ubuntu
 ansible_ssh_private_key_file: /home/ubuntu/.ssh/devops-toolkit.pem
+delete_groups: [cd, prod, serv-disc]

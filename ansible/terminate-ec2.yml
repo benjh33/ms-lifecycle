@@ -7,7 +7,7 @@
         region: us-east-1
         filters:
           "tag:devops_toolkit": ""
-          "tag:role": ['cd', 'prod', 'etcd']
+          "tag:role": "{{ delete_groups }}"
       register: ec2
     - name: Terminate instances that were previously launched
       ec2:

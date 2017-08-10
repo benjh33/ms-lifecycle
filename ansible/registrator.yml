@@ -1,10 +1,32 @@
-- hosts: registrator
-  remote_user: vagrant
+- hosts: localhost
+  remote_user: ubuntu
+  vars:
+    - EC2_NAME_TAG: serv-disc
+    - EC2_ROLE: serv-disc
+    - count_hosts: 3
+  roles:
+    - spot-ec2
+  tags: [always]
+
+- hosts: serv-disc
+  remote_user: ubuntu
+  tasks:
+    - name: set first to be the console_server
+      add_host:
+        hostname: "{{ ansible_default_ipv4.address }}"
+        groupname: consul_server
+      when: ec2_tag_Name == "serv-disc-0"
+  tags: [consul]
+
+- hosts: serv-disc
+  remote_user: ubuntu
   serial: 1
   vars:
     - registrator_name: registrator-consul
+    - registrator_protocol: consul
+    - registrator_port: 8500
   roles:
-    - common
-    - docker
     - consul
+    - consul-template
     - registrator
+  tags: [consul]
