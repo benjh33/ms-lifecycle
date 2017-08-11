@@ -1,20 +1,15 @@
-- name: gather facts
-  setup:
-  tags: [always]
-
 - name: Files are copied
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0755
   with_items: "{{ files }}"
-  tags: [etcd]
 
 - name: set some variables
   set_fact:
-    host_args: "{{ groups['serv-disc'] | map('regex_replace', '^(.*)$', 'http://\\1:2380' ) | list }}"
-    host_names: "{{ groups['serv-disc'] | map('extract', hostvars)| map(attribute='ec2_tag_Name')| list }}"
-  tags: [etcd]
+    host_args: "{{ groups['ec2_tag_role_serv_disc'] | map('regex_replace', '^(.*)$', 'http://\\1:2380' ) | list }}"
+    host_names: "{{ groups['ec2_tag_role_serv_disc'] | map('extract', hostvars)| map(attribute='ec2_tag_Name')| list }}"
+
 - name: format names
   set_fact: 
     value: "{{ item.0 }}={{ item.1 }}"
@@ -22,7 +17,6 @@
     - "{{ host_names }}"
     - "{{ host_args }}"
   register: formatted_names
-  tags: [etcd]
 
 - name: Is running
   shell: "nohup etcd -name {{ ec2_tag_Name }} \
@@ -39,7 +33,6 @@
     {{formatted_names.results | map(attribute='ansible_facts')|map(attribute='value')| join(',') }}
     -initial-cluster-state new \
     >/var/log/etcd.log 2>&1 &"
-  tags: [etcd]
   register: etcd_command
 
 # - name: Is running

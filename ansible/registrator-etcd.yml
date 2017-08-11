@@ -1,4 +1,4 @@
-- hosts: serv-disc
+- hosts: ec2_tag_role_serv_disc
   remote_user: ubuntu
   vars:
     - registrator_protocol: etcd

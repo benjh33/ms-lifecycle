@@ -1,33 +1,47 @@
+- hosts: localhost
+  remote_user: ubuntu
+  roles:
+    - spot-ec2
+
+- hosts: tag_devops_toolkit_worker
+  remote_user: ubuntu
+  roles:
+    - common
+
 - include: cd.yml
   tags: [cd, always]
+ 
 - include: prod.yml
   tags: [prod, always]
+
 - include: serv-disc.yml
   tags: [serv-disc, always]
+
 - include: registrator-etcd.yml
   tags: [serv-disc,docker]  
+
 - include: registrator.yml
   tags: [serv-disc,consul]
+
 # write hosts file on all devops hosts
-- hosts: tag_devops_toolkit
+- hosts: tag_devops_toolkit*
   remote_user: ubuntu
   tags: [hostsfile,always]
   tasks:
-  - meta: refresh_inventory
   - name: add hosts to hosts file
     lineinfile:
       insertafter: "127\\.0\\.0\\.1 .*"
       path: "/etc/hosts"
       state: absent
       regexp: ".*{{hostvars[item].ec2_tag_Name }}$"
-    with_items: "{{ groups['tag_devops_toolkit'] }}"
+    with_items: "{{ groups['vpc_id_vpc_460b5423'] }}"
   - name: add hosts to hosts file
     lineinfile:
       insertafter: "127\\.0\\.0\\.1 .*"
       path: "/etc/hosts"
       regexp: ".*{{hostvars[item].ec2_tag_Name }}$"
       line: "{{ hostvars[item].ec2_private_ip_address }} {{ hostvars[item].ec2_tag_Name }}"
-    with_items: "{{ groups['tag_devops_toolkit'] }}"
+    with_items: "{{ groups['vpc_id_vpc_460b5423'] }}"
   - name: remove previous 'known_hosts' file in home directory
     file:
       path: /home/ubuntu/.ssh/known_hosts

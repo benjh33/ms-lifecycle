@@ -1,21 +1,5 @@
-- hosts: localhost
+- hosts: e2_tag_role_serv_disc
   remote_user: ubuntu
-  vars:
-    - EC2_NAME_TAG: serv-disc
-    - EC2_ROLE: serv-disc
-    - count_hosts: 3
-  roles:
-    - spot-ec2
-  tags: [always]
-
-- hosts: serv-disc
-  remote_user: ubuntu
-  gather_facts: no
-  pre_tasks:
-  - name: install python-minimal
-    raw: apt-get -y update && apt-get -y install python-minimal
-    retries: 3
-    ignore_errors: yes
   roles:
     - common
     - docker

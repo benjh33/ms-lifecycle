@@ -8,14 +8,9 @@
     - spot-ec2
   tags: [etcd]
 
-- hosts: etcd
+- hosts: ec2_tag_role_serv_disc
   remote_user: ubuntu
   gather_facts: no
-  pre_tasks:
-  - name: install python-minimal
-    raw: sudo apt-get -y update; sudo apt-get -y install python-minimal
-    retries: 3
-    ignore_errors: yes
   roles:
     - common
     - etcd

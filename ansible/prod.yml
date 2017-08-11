@@ -1,20 +1,5 @@
-- hosts: localhost
+- hosts: ec2_tag_role_prod
   remote_user: ubuntu
-  vars:
-    - EC2_NAME_TAG: prod
-    - EC2_ROLE: prod
-  roles:
-    - spot-ec2
-  tags: [always]
-
-- hosts: prod
-  remote_user: ubuntu
-  gather_facts: no
-  pre_tasks:
-  - name: install python-minimal
-    raw: apt-get -y update && apt-get -y install python-minimal
-    retries: 3
-    ignore_errors: yes
   roles:
     - common
     - docker

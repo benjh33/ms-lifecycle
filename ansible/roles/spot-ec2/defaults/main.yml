@@ -1,0 +1,9 @@
+machines:
+  - name: cd
+    count: 1
+  - name: prod
+    count: 1
+  - name: serv_disc
+    count: 3
+  - name: proxy 
+    count: 1

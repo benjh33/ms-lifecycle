@@ -1,14 +1,4 @@
-- hosts: localhost
-  remote_user: ubuntu
-  vars:
-    - EC2_NAME_TAG: serv-disc
-    - EC2_ROLE: serv-disc
-    - count_hosts: 3
-  roles:
-    - spot-ec2
-  tags: [always]
-
-- hosts: serv-disc
+- hosts: ec2_tag_role_serv_disc
   remote_user: ubuntu
   tasks:
     - name: set first to be the console_server
@@ -18,7 +8,7 @@
       when: ec2_tag_Name == "serv-disc-0"
   tags: [consul]
 
-- hosts: serv-disc
+- hosts: ec2_tag_role_serv_disc
   remote_user: ubuntu
   serial: 1
   vars:

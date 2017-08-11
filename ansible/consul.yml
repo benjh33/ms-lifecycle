@@ -8,7 +8,7 @@
     - spot-ec2
   tags: [always]
 
-- hosts: serv-disc
+- hosts: ec2_tag_role_serv_disc
   remote_user: ubuntu
   tags:
     registrator_protocol: consul

@@ -1,22 +1,6 @@
-- hosts: localhost
+- hosts: ec2_tag_role_cd
   remote_user: ubuntu
-  vars:
-    - EC2_NAME_TAG: cd
-    - EC2_ROLE: cd
   roles:
-    - spot-ec2
-  tags: [always]
-
-- hosts: cd
-  remote_user: ubuntu
-  gather_facts: no
-  pre_tasks:
-  - name: install python-minimal
-    raw: sudo apt-get -y update; sudo apt-get -y install python-minimal
-    retries: 3
-    ignore_errors: yes
-  roles:
-    - common
     - docker
     - docker-compose
     - docker-flow

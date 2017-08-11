@@ -46,6 +46,6 @@
   uri:
     url: http://localhost:8500/v1/kv/proxy/ip
     method: PUT
-    body: "{{ ip }}"
+    body: "{{ ansible_default_ipv4.address }}"
   ignore_errors: yes
   tags: [nginx]

@@ -1,6 +1,5 @@
-- hosts: proxy
+- hosts: ec2_tag_role_proxy
   remote_user: vagrant
-  serial: 1
   roles:
     - common
     - docker

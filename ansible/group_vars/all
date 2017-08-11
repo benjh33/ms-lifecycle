@@ -12,4 +12,4 @@ docker_cfg_dest: /etc/docker/
 registry_host_dir: /data/registry
 agent_user: ubuntu
 ansible_ssh_private_key_file: /home/ubuntu/.ssh/devops-toolkit.pem
-delete_groups: [cd, prod, serv-disc]
+delete_groups: [cd, prod, serv_disc, proxy]

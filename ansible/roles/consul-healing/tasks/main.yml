@@ -23,19 +23,25 @@
   register: templates
   tags: [consul]
 
+# dynamically set consul_extra
+- name: Set consul_extra if host is consul server
+  set_fact:
+    consul_extra: -server -bootstrap 
+  when: ec2_tag_Name == "serv-disc-0"
+
 - name: Is running
   shell: "nohup consul agent {{ consul_extra }} \
     -data-dir {{ data_dir }} \
     -config-dir {{ config_dir }} \
-    -node={{ ansible_hostname }} \
+    -node={{ ec2_tag_Name }} \
     -bind={{ ip }} \
     -client=0.0.0.0 \
     >{{ logs_dir }}/consul.log 2>&1 &"
   tags: [consul]
 
 - name: Has joined
-  shell: consul join {{ consul_server_ip }}
-  when: consul_server_ip is defined
+  shell: consul join {{ groups['consul_server'][0] }}
+  when: ec2_tag_Name != "serv-disc-0"
   tags: [consul]
 
 - name: Consul is restarted
