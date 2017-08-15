@@ -1,0 +1,27 @@
+proto udp
+port 1194
+dev tun 
+server 10.201.0.0 255.255.255.0
+topology subnet
+persist-key
+persist-tun
+keepalive 10 60
+
+log-append {{ vpn_log_directory }}devops-tk.log 
+writepid {{ vpn_pid_directory }}devops-pid
+askpass {{ vpn_directory }}auth.txt
+
+remote-cert-tls client
+duplicate-cn
+tls-auth {{ vpn_directory }}pki/ta.key 0
+dh {{ vpn_directory}}pki/dh2048.pem
+ca {{ vpn_directory}}pki/ca.crt
+cert {{ vpn_directory}}pki/issued/devops-tk.crt
+key {{ vpn_directory}}pki/private/devops-tk.key
+
+user nobody
+group nogroup
+
+verb 3
+daemon
+push "route {{ vpn_subnet }} 255.255.255.0"

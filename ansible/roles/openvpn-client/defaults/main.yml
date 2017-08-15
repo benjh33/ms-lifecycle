@@ -1,0 +1,12 @@
+vpn_directory: /etc/openvpn/devops-tk/
+vpn_log_directory: /var/log/openvpn/
+vpn_pid_directory: /var/run/openvpn/
+files:
+  - client1.crt
+  - client1.key
+  - devops-ca.crt
+  - ta.key
+
+vpn_port: 1194
+vpn_server: ''
+

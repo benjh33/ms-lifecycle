@@ -1,0 +1,80 @@
+- name: install openvpn
+  apt:
+    name: "{{item}}"
+    force: yes
+  tags: [openvpn]
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  with_items:
+    - openvpn
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0600
+    owner: root
+    group: root
+  with_items:
+    - "{{ vpn_directory }}"
+    - "{{ vpn_log_directory }}"
+    - "{{ vpn_pid_directory }}"
+
+- name: copy files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ vpn_directory }}"
+    mode: 0600
+    owner: root
+    group: root
+  with_items: "{{ files }}"
+
+- name: get vpn_server ip
+  ec2_remote_facts: 
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default('')}}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default('')}}"
+    region: us-east-1
+    filters:
+      "tag:role": "vpn_server"
+  register: vpn_server
+
+- name: log
+  debug: msg="{{ vpn_server }}"
+
+- name: set vpn_server
+  set_fact:
+    vpn_server: "{{ vpn_server.instances[0].public_ip_address }}"
+    vpn_server_route: "{{vpn_server.instances[0].private_ip_address | regex_replace('[0-9]{1,3}\\.[0-9]{1,3}$', '0.0/16') }}"
+    local_vpn_server: "{{ vpn_server.instances[0].private_ip_address }}"
+
+- name: set vpn_server within AWS
+  set_fact:
+    vpn_server: "{{ local_vpn_server }}"
+  when: ec2_private_ip_address is defined
+
+- name: config template
+  template:
+    src: "{{ item }}" 
+    dest: "{{ vpn_directory }}/{{ item | regex_replace('\\.j2','') }}"
+    mode: 0600
+    owner: root
+    group: root
+  with_items:
+    - vpn-client.conf.j2
+    - auth.txt.j2
+
+# there's a better way
+- name: is it running?
+  shell: cat "{{ vpn_pid_directory }}client-pid"
+  ignore_errors: yes
+  register: is_running
+
+- name: log is running
+  debug: msg='{{is_running}}'
+
+- name: stop it when running
+  shell: "pkill -F {{ vpn_pid_directory }}client-pid"
+  ignore_errors: yes
+  when: restart_vpn is defined
+
+- name: Start openvpn client
+  shell: 'openvpn --config "{{ vpn_directory }}vpn-client.conf" &'

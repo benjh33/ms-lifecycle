@@ -1,0 +1,9 @@
+vpn_directory: "/etc/openvpn/"
+vpn_log_directory: "/var/log/openvpn/"
+vpn_pid_directory: "/var/run/openvpn/"
+auth_template: auth.txt.j2
+files:
+  - secret.key
+  - pki
+  - openssl-1.0.cnf
+

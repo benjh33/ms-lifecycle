@@ -1,0 +1,19 @@
+client
+proto udp
+remote {{ vpn_server }}
+port 1194
+dev tun 
+nobind
+log-append {{vpn_log_directory}}devops-tk.log 
+writepid {{ vpn_pid_directory }}client-pid
+
+remote-cert-tls server
+askpass {{ vpn_directory }}auth.txt
+tls-auth {{ vpn_directory }}ta.key 1
+ca {{ vpn_directory }}devops-ca.crt
+cert {{ vpn_directory }}client1.crt
+key {{ vpn_directory }}client1.key
+
+verb 3 
+# daemon
+
