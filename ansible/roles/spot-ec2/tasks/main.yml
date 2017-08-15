@@ -44,8 +44,8 @@
     - "{{ ec2.tagged_instances }}"
     - "{{ zipped_names }}"
 
-- name: refresh inventory when re tagging multiple instances
-  meta: refresh_inventory
+# - name: refresh inventory when re tagging multiple instances
+#   meta: refresh_inventory
 
 - name: Add new instance to group
   add_host:

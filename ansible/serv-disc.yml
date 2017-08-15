@@ -1,7 +1,5 @@
-- hosts: e2_tag_role_serv_disc
+- hosts: serv_disc
   remote_user: ubuntu
-  roles:
-    - common
-    - docker
+  roles: []
 
 

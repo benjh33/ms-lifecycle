@@ -7,6 +7,8 @@
   remote_user: ubuntu
   roles:
     - common
+    - docker
+  tags: [common, docker]
 
 - include: cd.yml
   tags: [cd, always]
@@ -17,11 +19,14 @@
 - include: serv-disc.yml
   tags: [serv-disc, always]
 
-- include: registrator-etcd.yml
-  tags: [serv-disc,docker]  
-
+# - include: registrator-etcd.yml
+#   tags: [serv-disc,docker]  
+#
 - include: registrator.yml
   tags: [serv-disc,consul]
+
+- include: nginx.yml
+  tags: [serv-disc, proxy, nginx]
 
 # write hosts file on all devops hosts
 - hosts: tag_devops_toolkit*

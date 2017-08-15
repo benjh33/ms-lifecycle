@@ -1,10 +1,5 @@
-- hosts: ec2_tag_role_proxy
-  remote_user: vagrant
+- hosts: proxy:tag_role_proxy
+  remote_user: ubuntu
   roles:
-    - common
-    - docker
     - docker-compose
-    - consul
-    - registrator
-    - consul-template
     - nginx

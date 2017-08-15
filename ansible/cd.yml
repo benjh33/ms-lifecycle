@@ -1,7 +1,6 @@
-- hosts: ec2_tag_role_cd
+- hosts: tag_Name_cd:cd
   remote_user: ubuntu
   roles:
-    - docker
     - docker-compose
     - docker-flow
     - consul-template

@@ -1,14 +1,4 @@
-- hosts: localhost
-  remote_user: ubuntu
-  vars:
-    - EC2_NAME_TAG: serv-disc
-    - EC2_ROLE: serv-disc
-    - count_hosts: 3
-  roles:
-    - spot-ec2
-  tags: [always]
-
-- hosts: ec2_tag_role_serv_disc
+- hosts: tag_role_serv_disc
   remote_user: ubuntu
   tags:
     registrator_protocol: consul

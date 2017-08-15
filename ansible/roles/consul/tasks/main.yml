@@ -15,7 +15,7 @@
 - name: Set consul_extra if host is consul server
   set_fact:
     consul_extra: -server -bootstrap 
-  when: ec2_tag_Name == "serv-disc-0"
+  when: ec2_tag_Name == "serv_disc_0"
 
 - name: Is running
   shell: "kill -9 $(pidof consul); nohup consul agent {{ consul_extra }} \
