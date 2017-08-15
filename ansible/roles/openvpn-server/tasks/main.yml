@@ -1,0 +1,67 @@
+- name: install openvpn
+  apt:
+    name: "{{item}}"
+    force: yes
+  tags: [openvpn]
+  with_items:
+    - openvpn
+
+- name: directories exist
+  file:
+    src: "{{ item }}"
+    dest: "{{ item }}"
+    state: directory
+    mode: 0600
+    owner: root
+    group: root
+  with_items:
+    - "{{ vpn_directory }}"
+    - "{{ vpn_log_directory }}"
+    - "{{ vpn_pid_directory }}"
+    
+- name: copy files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ vpn_directory }}{{ item }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items: "{{ files }}"
+
+- name: parse subnet
+  set_fact:
+    vpn_subnet: "{{ ec2_private_ip_address | regex_replace('[0-9]{1,3}\\.[0-9]{1,3}$', '1.0/24') }}"
+
+- name: copy config template
+  template:
+    src: server.conf.j2
+    dest: "{{ vpn_directory }}server.conf"
+    mode: 0600
+    owner: root
+    group: root
+
+- name: auth template
+  template:
+    src: auth.txt.j2
+    dest: "{{ vpn_directory }}auth.txt"
+    mode: 0600
+    owner: root
+    group: root
+
+- name: is it running?
+  shell: cat "{{ vpn_pid_directory }}devops-pid"
+  ignore_errors: yes
+  register: is_running
+
+- name: log is running
+  debug: msg='{{is_running | default("")}}'
+
+- name: stop it when running
+  shell: "pkill -F {{ vpn_pid_directory }}devops-pid"
+  ignore_errors: yes
+  when: restart_vpn is defined
+
+- name: Start openvpn server
+  shell: openvpn --config {{ vpn_directory }}server.conf
+  when: restart_vpn is defined or not (is_running.stdout == "")
+

@@ -1,0 +1,21 @@
+- hosts: localhost
+  remote_user: ben
+  become: no
+  roles:
+    - spot-ec2
+  tasks:
+  - name: write vars
+    template: 
+      src: variables.j2
+      dest: /tmp/ansible-variables.txt
+
+- hosts: tag_role_vpn_server
+  remote_user: ubuntu
+  roles:
+    - common
+    - openvpn-server
+
+- hosts: localhost:tag_role_cd
+  tasks:
+  roles:
+    - openvpn-client

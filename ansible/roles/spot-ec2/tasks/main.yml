@@ -11,16 +11,18 @@
     group: devops-toolkit-2
     exact_count: "{{ machines | map(attribute='count') | map('int') | sum(start=0) }}"
     vpc_subnet_id: subnet-6d1e9134
-    assign_public_ip: no
+    assign_public_ip: yes
     instance_tags:
       devops_toolkit: worker
     count_tag:
       devops_toolkit: worker
   register: ec2
 
+- debug: msg="{{ec2.tagged_instances}}"
+
 - name: Wait for SSH to come up
   wait_for:
-    host: "{{ item.private_ip }}"
+    host: "{{ item.public_ip }}"
     port: 22
     delay: 0
     timeout: 320
@@ -54,14 +56,3 @@
   with_items: 
     - "{{ ec2.tagged_instances }}"
 
-- name: install python-minimal
-  delegate_to: "{{ item.private_ip }}"
-  raw: test -e /usr/bin/python || (apt -y update && apt -y install python-minimal)
-  register: installed_python
-  until: installed_python.rc == 0
-  changed_when: 
-    - installed_python.stdout != ""
-    - installed_python.stdout != "\r\n"
-  ignore_errors: yes
-  with_items:
-    - "{{ec2.tagged_instances}}"
