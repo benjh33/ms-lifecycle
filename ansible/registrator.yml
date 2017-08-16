@@ -1,14 +1,4 @@
-- hosts: tag_role_serv_disc:tag_role_proxy
-  remote_user: ubuntu
-  tasks:
-    - name: set first to be the console_server
-      add_host:
-        hostname: "{{ ansible_default_ipv4.address }}"
-        groupname: consul_server
-      when: ec2_tag_Name == "serv_disc_0"
-  tags: [consul]
-
-- hosts: tag_role_serv_disc:tag_role_proxy
+- hosts: tag_devops_toolkit_worker
   remote_user: ubuntu
   serial: 1
   vars:

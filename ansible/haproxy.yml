@@ -1,11 +1,5 @@
-- hosts: all
-  remote_user: vagrant
+- hosts: tag_role_proxy
+  remote_user: ubuntu
   serial: 1
   roles:
-    - common
-    - docker
-    - docker-compose
-    - consul
-    - registrator
-    - consul-template
     - haproxy

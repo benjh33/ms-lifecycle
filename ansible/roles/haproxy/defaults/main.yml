@@ -4,11 +4,12 @@ ports:
 directories:
   - /data/haproxy/config
 
-files: [
-  {src: 'haproxy.cfg.orig', dest: '/data/haproxy/config/haproxy.cfg.orig'}
-]
+files:
+  - src: 'haproxy.cfg.orig'
+    dest: '/data/haproxy/config/haproxy.cfg.orig'
 
-templates: [
-  {src: 'haproxy.cfg', dest: '/data/haproxy/config/haproxy.cfg', force: 'no'}
-]
+templates:
+  - src: 'haproxy.cfg'
+    dest: '/data/haproxy/config/haproxy.cfg'
+    force: 'no'
 

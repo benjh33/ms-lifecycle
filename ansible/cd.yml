@@ -3,6 +3,5 @@
   roles:
     - docker-compose
     - docker-flow
-    - consul-template
     - registry
   tags: [cd,common,docker,registry]

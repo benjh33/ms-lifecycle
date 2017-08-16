@@ -1,5 +1,6 @@
 - hosts: prod
   remote_user: ubuntu
-  roles: []
+  roles: 
+    - service
   tags: [prod,common,docker]
 

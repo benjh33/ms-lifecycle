@@ -18,7 +18,7 @@
       devops_toolkit: worker
   register: ec2
 
-- debug: msg="{{ec2.tagged_instances}}"
+# - debug: msg="{{ec2.tagged_instances}}"
 
 - name: Wait for SSH to come up
   wait_for:
@@ -41,18 +41,23 @@
     state: present
     tags:
       Name: "{{ item.1['name'] }}"
-      role: "{{ item.1['role']}}"
+      role: "{{ item.1['name']}}"
   with_together:
     - "{{ ec2.tagged_instances }}"
     - "{{ zipped_names }}"
 
-# - name: refresh inventory when re tagging multiple instances
-#   meta: refresh_inventory
+- name: refresh inventory when tagging multiple instances
+  meta: refresh_inventory
+
+- name: Add new instance to group
+  add_host:
+    hostname: "{{ item.key }}"
+    groupname: "{{ item.value['ec2_tag_role'] }}"
+  with_dict: "{{ hostvars }}"
 
 - name: Add new instance to group
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: "{{ item.tags.role }}"
+    groupname: "tag_devops_toolkit_worker"
   with_items: 
     - "{{ ec2.tagged_instances }}"
-

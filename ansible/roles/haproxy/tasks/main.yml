@@ -2,7 +2,7 @@
   file:
     dest: "{{ item }}"
     state: directory
-    owner: vagrant
+    owner: ubuntu
   with_items: "{{ directories }}"
   tags: [haproxy]
 
@@ -15,10 +15,12 @@
   tags: [haproxy]
 
 - name: Container is running
-  docker:
+  docker_container:
     image: million12/haproxy
     name: haproxy
-    state: running
+    state: started
     ports: "{{ ports }}"
+    recreate: yes
+    capabilities: NET_ADMIN
     volumes: /data/haproxy/config/:/etc/haproxy/
   tags: [haproxy]

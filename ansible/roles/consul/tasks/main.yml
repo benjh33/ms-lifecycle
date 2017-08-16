@@ -11,11 +11,17 @@
     mode: "{{ item.mode }}"
   with_items: "{{ files }}"
 
+- name: set first to be the console_server
+  set_fact:
+    consul_server: "{{ item.key }}"
+  with_dict: "{{ hostvars }}"
+  when: item.value['ec2_tag_Name'] in ['serv_disc', 'serv_disc_0']
+
 # dynamically set consul_extra
 - name: Set consul_extra if host is consul server
   set_fact:
     consul_extra: -server -bootstrap 
-  when: ec2_tag_Name == "serv_disc_0"
+  when: ansible_default_ipv4.address == consul_server
 
 - name: Is running
   shell: "kill -9 $(pidof consul); nohup consul agent {{ consul_extra }} \
@@ -28,5 +34,6 @@
     >{{ logs_dir }}/consul.log 2>&1 &"
 
 - name: Has joined
-  shell: consul join {{ groups['consul_server'][0] }}
-  when: ec2_tag_Name != "serv-disc-0"
+  shell: consul join {{ consul_server }}
+  when: ansible_default_ipv4.address != consul_server
+
