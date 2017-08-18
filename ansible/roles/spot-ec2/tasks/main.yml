@@ -41,19 +41,26 @@
     state: present
     tags:
       Name: "{{ item.1['name'] }}"
-      role: "{{ item.1['name']}}"
+      role: "{{ item.1['role'] }}"
   with_together:
     - "{{ ec2.tagged_instances }}"
     - "{{ zipped_names }}"
 
-- name: refresh inventory when tagging multiple instances
+# - name: refresh inventory when tagging multiple instances
+#   meta: refresh_inventory
+- name: Refresh EC2 cache
+  command: ./ec2.py --refresh-cache
+
+- name: Refresh in-memory EC2 cache
   meta: refresh_inventory
 
 - name: Add new instance to group
   add_host:
-    hostname: "{{ item.key }}"
-    groupname: "{{ item.value['ec2_tag_role'] }}"
-  with_dict: "{{ hostvars }}"
+    hostname: "{{ item.0.private_ip }}"
+    groupname: "{{ item.1['role'] }}"
+  with_together:
+    - "{{ ec2.tagged_instances }}"
+    - "{{ zipped_names }}"
 
 - name: Add new instance to group
   add_host:

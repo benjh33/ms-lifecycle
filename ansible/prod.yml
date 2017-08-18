@@ -1,6 +1,6 @@
-- hosts: prod
+- hosts: prod:tag_role_prod
   remote_user: ubuntu
   roles: 
+    - nginx
     - service
-  tags: [prod,common,docker]
 

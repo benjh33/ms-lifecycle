@@ -1,5 +1,6 @@
 - hosts: serv_disc
   remote_user: ubuntu
-  roles: []
+  roles: 
+    - nginx
 
 

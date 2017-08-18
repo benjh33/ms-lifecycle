@@ -1,4 +1,4 @@
-- hosts: proxy:tag_role_proxy
+- hosts: proxy:tag_role_proxy:prod:tag_role_prod
   remote_user: ubuntu
   roles:
     - docker-compose

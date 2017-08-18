@@ -1,6 +1,5 @@
-- hosts: localhost
-  remote_user: vagrant
-  serial: 1
+- hosts: cd:tag_role_cd
+  remote_user: ubuntu
   roles:
     - consul-template
     - jenkins

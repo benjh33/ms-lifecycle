@@ -8,13 +8,14 @@
   tags: [jenkins]
 
 - name: Container is running
-  docker:
+  docker_container:
     name: jenkins
     image: "jenkins:{{ jenkins_version }}"
     ports: 8080:8080
     volumes:
       - /data/jenkins:/var/jenkins_home
-      - /vagrant/.vagrant/machines:/machines
+      # need to copy ssh keys to the jenkins/cd machine
+      # - /home/ubuntu/.vagrant/machines:/machines # ????
   register: container_result
   tags: [jenkins]
 

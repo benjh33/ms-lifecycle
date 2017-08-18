@@ -30,6 +30,10 @@
   remote_user: ubuntu
   tags: [hostsfile,always]
   tasks:
+  - name: write vars
+    template: 
+      src: variables.j2
+      dest: /tmp/ansible-variables.txt
   - name: add hosts to hosts file
     lineinfile:
       insertafter: "127\\.0\\.0\\.1 .*"
@@ -60,6 +64,7 @@
 - include: serv-disc.yml
 - include: registrator.yml
 - include: cd.yml
+  tags: [docker]
 - include: prod.yml
 
 

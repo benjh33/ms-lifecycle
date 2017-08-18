@@ -1,6 +1,18 @@
-- hosts: tag_devops_toolkit_worker
+- hosts: tag_role_serv_disc
   remote_user: ubuntu
   serial: 1
+  vars:
+    - registrator_name: registrator-consul
+    - registrator_protocol: consul
+    - registrator_port: 8500
+  roles:
+    - consul
+    - consul-template
+    - registrator
+  tags: [consul]
+
+- hosts: tag_devops_toolkit_worker:!tag_role_serv_disc
+  remote_user: ubuntu
   vars:
     - registrator_name: registrator-consul
     - registrator_protocol: consul
