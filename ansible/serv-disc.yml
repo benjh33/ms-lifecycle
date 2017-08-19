@@ -1,4 +1,4 @@
-- hosts: serv_disc
+- hosts: tag_role_serv_disc
   remote_user: ubuntu
   roles: 
     - nginx

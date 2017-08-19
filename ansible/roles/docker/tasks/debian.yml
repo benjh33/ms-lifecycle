@@ -62,7 +62,7 @@
     daemon_reload: yes
     name: docker
     state: restarted
-  when: ((copy_result|changed or sysd_result|changed) and is_systemd is defined) or restart_docker is defined
+  when: (copy_result|changed or sysd_result|changed) or restart_docker is defined
   tags: [docker]
 
 

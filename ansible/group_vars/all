@@ -11,5 +11,6 @@ docker_cfg_dest: /etc/docker/
 jenkins_version: 1.642.4
 registry_host_dir: /data/registry
 agent_user: ubuntu
+pk_file: devops-toolkit.pem
 ansible_ssh_private_key_file: /home/ubuntu/.ssh/devops-toolkit.pem
 delete_groups: [cd, prod, serv_disc, proxy]

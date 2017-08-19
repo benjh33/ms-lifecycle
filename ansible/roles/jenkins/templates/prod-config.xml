@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <slave>
-    <name>swarm-master</name>
+    <name>prod</name>
     <description></description>
-    <remoteFS>/data/jenkins_slaves/swarm-master</remoteFS>
-    <numExecutors>1</numExecutors>
-    <mode>EXCLUSIVE</mode>
+    <remoteFS>/data/jenkins_slaves/cd</remoteFS>
+    <numExecutors>3</numExecutors>
+    <mode>NORMAL</mode>
     <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
     <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.9">
-        <host>10.100.192.200</host>
+        <host>{{ groups['tag_role_prod'][0] }}</host>
         <port>22</port>
-        <credentialsId>c03451d6-4552-4719-9033-39e65a23184c</credentialsId>
+        <credentialsId>b90e7674-13fb-4108-bd07-843842127283</credentialsId>
         <maxNumRetries>0</maxNumRetries>
         <retryWaitTime>0</retryWaitTime>
     </launcher>
-    <label>swarm-master lb</label>
+    <label>prod</label>
     <nodeProperties/>
     <userId>anonymous</userId>
 </slave>

@@ -4,7 +4,7 @@
     mode: 0777
     recurse: yes
     state: directory
-  with_items: "{{ configs }}"
+  with_items: "{{ config_files + config_templates }}"
   tags: [jenkins]
 
 - name: Container is running
@@ -12,10 +12,11 @@
     name: jenkins
     image: "jenkins:{{ jenkins_version }}"
     ports: 8080:8080
+    state: started
+    recreate: no
     volumes:
       - /data/jenkins:/var/jenkins_home
-      # need to copy ssh keys to the jenkins/cd machine
-      # - /home/ubuntu/.vagrant/machines:/machines # ????
+      - /home/ubuntu/.ssh:/machines 
   register: container_result
   tags: [jenkins]
 
@@ -23,15 +24,25 @@
   when: container_result|changed
   tags: [jenkins]
 
-- name: Configurations are present
+- name: Configuration files are present
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dir }}/{{ item.file }}"
     mode: "{{ item.mode }}"
-  with_items: "{{ configs }}"
-  register: configs_result
+  with_items: "{{ config_files }}"
+  register: config_files_result
   tags: [jenkins]
 
+- name: Configuration templates are present
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dir }}/{{ item.file }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ config_templates }}"
+  register: config_templates_result
+  tags: [jenkins]
+
+# didn't work the first time
 - name: Plugins are installed
   shell: "curl -X POST \
     -d '<jenkins><install plugin=\"{{ item }}@latest\" /></jenkins>' \
@@ -51,26 +62,28 @@
 # Workaround to fix the bug in restarting containers from Ansible 2
 
 - name: Container is stopped
-  docker:
+  docker_container:
     name: jenkins
     image: "jenkins:{{ jenkins_version }}"
     state: stopped
-  when: configs_result|changed or plugins_result|changed
+  when: config_files_result|changed or config_templates|changed or plugins_result|changed
   tags: [jenkins]
 
 - name: Container is running
-  docker:
+  docker_container:
     name: jenkins
     image: "jenkins:{{ jenkins_version }}"
     ports: 8080:8080
+    state: started
+    recreate: no
     volumes:
       - /data/jenkins:/var/jenkins_home
-      - /vagrant/.vagrant/machines:/machines
-  when: configs_result|changed or plugins_result|changed
+      - /home/ubuntu/.ssh:/machines
+  when: config_templates_result|changed or config_files_result|changed or plugins_result|changed
   tags: [jenkins]
 
 - pause: seconds=30
-  when: configs_result|changed or plugins_result|changed
+  when: config_templates_result|changed or config_files_result|changed or plugins_result|changed
   tags: [jenkins]
 
 - name: Job directories are present

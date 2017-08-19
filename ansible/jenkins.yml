@@ -1,5 +1,4 @@
 - hosts: cd:tag_role_cd
   remote_user: ubuntu
   roles:
-    - consul-template
     - jenkins

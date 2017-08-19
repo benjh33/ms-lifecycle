@@ -1,6 +1,5 @@
-- hosts: jenkins-node
-  remote_user: vagrant
-  serial: 1
+- hosts: tag_role_prod:tag_role_cd
+  remote_user: ubuntu
   roles:
     - java
     - jenkins-node

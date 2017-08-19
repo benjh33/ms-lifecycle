@@ -1,5 +1,5 @@
 - hosts: prod
-  remote_user: vagrant
+  remote_user: ubuntu
   serial: 1
   roles:
     - common
@@ -9,3 +9,4 @@
     - registrator
     - consul-template
     - nginx
+    - service

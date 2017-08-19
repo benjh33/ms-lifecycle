@@ -1,5 +1,5 @@
-def proxy = "10.100.198.200"
-def consul = "http://10.100.192.200:8500"
+def proxy = "proxy"
+def consul = "http://cd:8500"
 def envs = [
         "FLOW_PROXY_HOST=${proxy}",
         "FLOW_PROXY_RECONF_PORT=8081",
