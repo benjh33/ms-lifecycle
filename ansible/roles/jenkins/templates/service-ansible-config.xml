@@ -39,7 +39,6 @@
       <command>export PYTHONUNBUFFERED=1
 
 ansible-playbook {{ ansible_env['PWD'] }}/ansible/service.yml \
-    -i {{ ansible_env['PWD'] }}/ansible/ec2.py \
     --extra-vars &quot;repo_dir=${PWD} service_name={{ item.service_name }}&quot;</command>
     </hudson.tasks.Shell>
   </builders>

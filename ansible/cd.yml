@@ -1,6 +1,7 @@
 - hosts: tag_Name_cd:cd
   remote_user: ubuntu
   roles:
+    - ansible
     - docker-compose
     - docker-flow
     - registry

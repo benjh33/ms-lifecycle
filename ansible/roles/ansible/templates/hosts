@@ -1,0 +1,12 @@
+{% for group, hosts in groups.items() %}
+[{{group}}]
+{% for host in hosts %}
+{{ host }}
+{% endfor %}
+{% if group.startswith('tag_role_') %}
+[{{group | regex_replace('tag_role_', '') }}]
+{% for host in hosts %}
+{{ host }}
+{% endfor %}
+{% endif %}
+{% endfor %}

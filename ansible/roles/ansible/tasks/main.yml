@@ -1,0 +1,40 @@
+- name: Install software properties common
+  apt:
+    name: software-properties-common
+    state: present
+
+- name: Add ansible repo
+  apt_repository:
+    repo: 'ppa:ansible/ansible'
+    state: present
+
+- name: Install ansible
+  apt:
+    name: ansible
+    force: yes
+    state: present
+
+- name: Add ansible directory
+  file:
+    dest: /etc/ansible
+    state: directory
+    mode: 0755
+    owner: ubuntu
+    group: ubuntu
+
+- name: Copy ansible files
+  copy: 
+    src: "{{ item }}"
+    dest: "/etc/ansible/{{ item }}"
+    mode: 0755
+    owner: ubuntu
+    group: ubuntu
+  with_items: "{{ files }}"
+
+- name: create hosts file
+  template:
+    src: "hosts"
+    dest: /etc/ansible/hosts
+    mode: 0644
+    owner: ubuntu
+    group: ubuntu
