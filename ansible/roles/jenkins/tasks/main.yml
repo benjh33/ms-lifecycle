@@ -42,6 +42,16 @@
   register: config_templates_result
   tags: [jenkins]
 
+- name: Request jenkins until home is shown
+  uri:
+    url: "http://{{ ansible_default_ipv4.address }}:8080/"
+    return_content: yes
+  delegate_to: localhost
+  register: jenkins_ready
+  retries: 10
+  delay: 2
+  until: '"Build Queue" in jenkins_ready.content'
+
 # didn't work the first time
 - name: Plugins are installed
   shell: "curl -X POST \
@@ -54,10 +64,11 @@
   register: plugins_result
   tags: [jenkins]
 
-- wait_for:
-    path: /data/jenkins/plugins/{{ item }}
-  with_items: "{{ plugins }}"
-  tags: [jenkins]
+# this isn't necessary with "creates" in above step
+# - wait_for:
+#     path: /data/jenkins/plugins/{{ item }}
+#   with_items: "{{ plugins }}"
+#   tags: [jenkins]
 
 # Workaround to fix the bug in restarting containers from Ansible 2
 

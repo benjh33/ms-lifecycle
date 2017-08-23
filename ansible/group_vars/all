@@ -1,5 +1,5 @@
 consul_extra: ""
-proxy_url: http://{{ ansible_default_ipv4.address }}
+proxy_url: http://{{ groups['tag_role_proxy'][0] }}
 proxy_url2: http://{{ ansible_default_ipv4.address }}
 registry: cd:5000
 registry_url: cd:5000/

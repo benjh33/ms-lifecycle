@@ -1,17 +1,3 @@
-- hosts: tag_devops_toolkit_master
+- hosts: tag_role_cd
   remote_user: ubuntu
-  vars:
-    dlist: [{'a': 1, 'b': 2}, {'a':'okay', 'b':'yep'}]
-  # roles:
-  #   - spot-ec2
-  #   - common
-  # tasks:
-  #   - name: test map format
-  #     debug: msg="{{ [['a', 'b'], ['b', 'c']]|map('map_format', '%s-%s')| list }}"
-  #
-  #   - name: test map format
-  #     debug: msg="{{ [['a', 'b'], ['b', 'c']]|map('map_format', '%s-%s')| list }}"
-  #
-  #   - name: test dict format
-  #     debug: msg="{{ dlist|map('dict_format', '{a}-{b}')| list }}"
-  #
+  tasks:

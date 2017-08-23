@@ -1,8 +1,26 @@
-- hosts: tag_Name_cd:cd
-  remote_user: ubuntu
+- hosts: tag_Name_cd
+  remote_user: "{{ agent_user }}"
   roles:
     - ansible
     - docker-compose
     - docker-flow
     - registry
     - jenkins
+  tasks:
+  - name: clone repo
+    git:
+      repo: https://github.com/benjh33/ms-lifecycle.git
+      clone: yes
+      version: docker
+      dest: /home/{{ agent_user }}/ms-lifecycle
+      owner: ubuntu
+      group: ubuntu
+  - name: Copy ssh private key
+    copy:
+      src: /home/{{ agent_user }}/.ssh/devops-toolkit.pem
+      dest: /home/{{ agent_user }}/.ssh/
+      mode: 0600
+      owner: {{ agent_user }}
+      group: {{ agent_user }}
+
+

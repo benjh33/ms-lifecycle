@@ -65,6 +65,7 @@
 - include: registrator.yml
 - include: cd.yml
   tags: [docker]
+- include: jenkins-node.yml
 - include: prod.yml
 
 
